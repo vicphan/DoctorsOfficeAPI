@@ -40,8 +40,7 @@
 				return true;
 			}
 			return false;
-		}
-		
+		}	
 				public function remove(){
 			
 			if ($this->check_test()){
