@@ -29,6 +29,7 @@ if (!empty($data->Pharm_name) and !empty($data->Med_name)){
 		else{
 			http_response_code(503);
 			echo json_encode(array("message" => "stocked_by price was unable to be modified"));
+
 		}
 	}
 }
