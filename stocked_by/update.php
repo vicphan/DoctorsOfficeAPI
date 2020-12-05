@@ -16,6 +16,7 @@ $stocked_by = new Stocked_by($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
+
 if (!empty($data->Pharm_name) and !empty($data->Med_name)){
 	$test ->med_name = $data -> Med_name;
 	$test ->pharm_name = $data -> Pharm_name;
@@ -29,7 +30,6 @@ if (!empty($data->Pharm_name) and !empty($data->Med_name)){
 		else{
 			http_response_code(503);
 			echo json_encode(array("message" => "stocked_by price was unable to be modified"));
-
 		}
 	}
 }
