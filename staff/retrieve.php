@@ -1,5 +1,5 @@
 <?php
-//file selects all entries in staff table from database 
+//file retrieves entry from database
 header("Access-Control-Allow-Origin: *"); //anyone can read data
 header("Content-Type: application/json; charset=UTF-8"); //returns json object
 
@@ -10,14 +10,17 @@ $database = new Database();
 $db = $database -> getConnection();
 
 $staff = new Staff($db);
-$staff_db = $staff->all();
-$staff_arr = array();
-$rows = $staff_db -> num_rows;
 
-if ($rows > 0){
-	while ($row = $staff_db->fetch_array()){
-	extract($row); 
-	$staff_entry = array(	"ID" => $row['ID'],
+$data = json_decode(file_get_contents("php://input"));
+
+if (!empty($data->ID)){
+	$staff -> id = $data ->ID;
+	$staff_entry = $staff-> retrieve();
+	$entries = $staff_entry -> num_rows;
+	if ($entries > 0){
+		$row = $staff_entry-> fetch_array();
+		extract($row);
+		$found_entry = array(	"ID" => $row['ID'],
 							"Position" => $row['Position'],
 							"Salary" => $row['Salary'],
 							"Fname" => $row['Fname'],
@@ -27,20 +30,18 @@ if ($rows > 0){
 							"Birth_year" => $row['Birth_year'],
 							"Phone_number" => $row['Phone_number']
 						);
-	array_push($staff_arr, $staff_entry);
+		http_response_code(200);
+		echo json_encode($found_entry);
 	}
-
-	http_response_code(200); //ok reponse
-	echo json_encode($staff_arr);
+	else{
+		http_response_code(404);
+		echo json_encode(array("message"=>"Staff not found"));
+	}
 }
 else{
-	http_response_code(404); //error response
-	echo json_encode(
-		array("message" => "No records found")
-	);
+	http_response_code(503);
+	echo json_encode(array("message"=>"Error. Please enter valid id"));
 }
 
-$db -> close();
-
+$db-> close();
 ?>
-	

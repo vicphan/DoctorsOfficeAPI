@@ -1,5 +1,5 @@
 <?php
-
+//updates info in database
 header("Access-Control-Allow-OriginL *");//allows all users access
 header("Content-Type: application/json; charset=UTF-8"); //sets content to json
 header("Access-Control-Allow-Methods: POST"); //modify database

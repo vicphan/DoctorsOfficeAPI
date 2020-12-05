@@ -38,6 +38,7 @@
 			return false;
 		}
 		
+		
 		public function check_user(){
 			//checks if user is in database
 			$check = $this->conn->prepare("SELECT * FROM ".$this->table_name." WHERE id = ?");
@@ -48,6 +49,29 @@
 				return true;
 			}
 			return false;
+		}
+		
+		public function remove(){
+			
+			if ($this->check_user()){
+				//removes user if found in database
+				$statement = $this->conn->prepare("DELETE FROM ".$this->table_name." WHERE ID = ?");
+				$statement -> bind_param("i",  $this->id);
+				if ($statement -> execute()){
+					return true;
+				}
+			}
+			
+			return false;
+			
+		}
+		
+		public function retrieve(){
+			$statement = $this->conn->prepare("SELECT * FROM ".$this->table_name." WHERE id = ?");
+			$statement -> bind_param("i", $this-> id);
+			$statement -> execute();
+			$result = $statement -> get_result();
+			return $result;
 		}
 			
 		
