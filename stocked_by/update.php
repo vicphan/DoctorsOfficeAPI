@@ -18,78 +18,16 @@ $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->ID)){
 	$stocked_by->id = $data->ID;
-	//update position
-	if (!empty($data-> Position)){
-		$stocked_by->position = $data->Position;
+	//update price
+	if (!empty($data-> Price)){
+		$stocked_by->price = $data->Price;
 		if ($stocked_by->update_position()){
 			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by position was modified"));
+			echo json_encode(array("message" => "stocked_by price was modified"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by position was unable to be modified"));
-		}
-	}
-	//update salary
-	if (!empty($data-> Salary)){
-		$stocked_by->salary = $data->Salary;
-		if ($stocked_by->update_salary()){
-			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by salary was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by salary was unable to be modified"));
-		}
-	}
-	//update first name
-	if (!empty($data-> Fname)){
-		$stocked_by->fname = $data->Fname;
-		if ($stocked_by->update_fname()){
-			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by first name was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by first name was unable to be modified"));
-		}
-	}
-	//update last name
-	if (!empty($data-> Lname)){
-		$stocked_by->lname = $data->Lname;
-		if ($stocked_by->update_lname()){
-			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by lname was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by lname was unable to be modified"));
-		}
-	}
-	//update birth day
-	if (!empty($data-> Birth_day) && !empty($data->Birth_month) && !empty($data->Birth_year)){
-		$stocked_by -> birth_day = $data -> Birth_day;
-		$stocked_by -> birth_month = $data -> Birth_month;
-		$stocked_by -> birth_year = $data ->Birth_year;
-		if ($stocked_by->update_birth()){
-			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by birthday was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by birthday was unable to be modified"));
-		}
-	}
-	//update phone number
-	if (!empty($data-> Phone_number)){
-		$stocked_by -> phone_number = $data ->Phone_number;
-		if ($stocked_by->update_pnum()){
-			http_response_code(200);
-			echo json_encode(array("message" => "stocked_by phone number was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "stocked_by phone number was unable to be modified"));
+			echo json_encode(array("message" => "stocked_by price was unable to be modified"));
 		}
 	}
 }
