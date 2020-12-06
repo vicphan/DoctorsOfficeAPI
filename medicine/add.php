@@ -7,32 +7,31 @@ header("Access-Control-Max-Age: 300"); //results can be cached for 5 minutes
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once "../config/database.php"; //includes database.php file
-include_once "../entities/equipment.php"; //includes equipment.php file
+include_once "../entities/medicine.php"; //includes medicine.php file
 
 $database = new Database();
 $db = $database -> getConnection();
 
-$equipment = new Equipment($db);
+$medicine = new Medicine($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data-> ID) && !empty($data-> Name) && !empty($data-> Quantity)){
-		$equipment -> id = $data-> ID;
-		$equipment -> name = $data -> Name;
-		$equipment -> quantity = $data -> Quantity;
+if (!empty($data-> Name) && !empty($data-> Brand)){
+		$medicine -> name = $data -> Name;
+		$medicine -> brand = $data -> Brand;
 		
-		if ($equipment -> add()){
+		if ($medicine -> add()){
 			http_response_code(201);
-			echo json_encode(array("message" => "equipment was added"));
+			echo json_encode(array("message" => "medicine was added"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "equipment was not added"));
+			echo json_encode(array("message" => "medicine was not added"));
 		}
 	}
 else{
 	http_response_code(400);
-	echo json_encode(array("message" => "data is incomplete"));
+	echo json_encode(array("message" => "medicine is incomplete"));
 }
 
 $db->close();

@@ -7,95 +7,57 @@ header("Access-Control-Max-Age: 300"); //results can be cached for 5 minutes
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once "../config/database.php"; //includes database.php file
-include_once "../entities/staff.php"; //includes staff.php file
+include_once "../entities/equipment.php"; //includes equipment.php file
 
 $database = new Database();
 $db = $database -> getConnection();
 
-$staff = new Staff($db);
+$equipment = new Equipment($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->ID)){
-	$staff->id = $data->ID;
+	$equipment->id = $data->ID;
 	//update position
 	if (!empty($data-> Position)){
-		$staff->position = $data->Position;
-		if ($staff->update_position()){
+		$equipment->position = $data->Position;
+		if ($equipment->update_position()){
 			http_response_code(200);
-			echo json_encode(array("message" => "staff position was modified"));
+			echo json_encode(array("message" => "equipment position was modified"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "staff position was unable to be modified"));
+			echo json_encode(array("message" => "equipment position was unable to be modified"));
 		}
 	}
-	//update salary
-	if (!empty($data-> Salary)){
-		$staff->salary = $data->Salary;
-		if ($staff->update_salary()){
+	//update name
+	if (!empty($data-> Name)){
+		$equipment->name = $data->Name;
+		if ($equipment->update_name()){
 			http_response_code(200);
-			echo json_encode(array("message" => "staff salary was modified"));
+			echo json_encode(array("message" => "equipment name was modified"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "staff salary was unable to be modified"));
+			echo json_encode(array("message" => "equipment name was unable to be modified"));
 		}
 	}
-	//update first name
-	if (!empty($data-> Fname)){
-		$staff->fname = $data->Fname;
-		if ($staff->update_fname()){
+	//update quantity
+	if (!empty($data-> Quantity)){
+		$equipment -> quantity = $data ->Quantity;
+		if ($equipment->update_quantity()){
 			http_response_code(200);
-			echo json_encode(array("message" => "staff first name was modified"));
+			echo json_encode(array("message" => "equipment quantity was modified"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "staff first name was unable to be modified"));
-		}
-	}
-	//update last name
-	if (!empty($data-> Lname)){
-		$staff->lname = $data->Lname;
-		if ($staff->update_lname()){
-			http_response_code(200);
-			echo json_encode(array("message" => "staff lname was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "staff lname was unable to be modified"));
-		}
-	}
-	//update birth day
-	if (!empty($data-> Birth_day) && !empty($data->Birth_month) && !empty($data->Birth_year)){
-		$staff -> birth_day = $data -> Birth_day;
-		$staff -> birth_month = $data -> Birth_month;
-		$staff -> birth_year = $data ->Birth_year;
-		if ($staff->update_birth()){
-			http_response_code(200);
-			echo json_encode(array("message" => "staff birthday was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "staff birthday was unable to be modified"));
-		}
-	}
-	//update phone number
-	if (!empty($data-> Phone_number)){
-		$staff -> phone_number = $data ->Phone_number;
-		if ($staff->update_pnum()){
-			http_response_code(200);
-			echo json_encode(array("message" => "staff phone number was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "staff phone number was unable to be modified"));
+			echo json_encode(array("message" => "equipment quantity was unable to be modified"));
 		}
 	}
 }
 else{
 	http_response_code(503);
-	echo json_encode(array("message" => "Unable to update staff info"));
+	echo json_encode(array("message" => "Unable to update equipment info"));
 }
 
 $db->close();

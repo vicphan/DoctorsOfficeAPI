@@ -1,37 +1,31 @@
 <?php
-//file selects all entries in staff table from database 
+//file selects all entries in equipment table from database 
 header("Access-Control-Allow-Origin: *"); //anyone can read data
 header("Content-Type: application/json; charset=UTF-8"); //returns json object
 
 include_once "../config/database.php"; //includes database.php file
-include_once "../entities/staff.php"; //includes staff.php file
+include_once "../entities/equipment.php"; //includes equipment.php file
 
 $database = new Database();
 $db = $database -> getConnection();
 
-$staff = new Staff($db);
-$staff_db = $staff->all();
-$staff_arr = array();
-$rows = $staff_db -> num_rows;
+$equipment = new Equipment($db);
+$equipment_db = $equipment->all();
+$equipment_arr = array();
+$rows = $equipment_db -> num_rows;
 
 if ($rows > 0){
-	while ($row = $staff_db->fetch_array()){
+	while ($row = $equipment_db->fetch_array()){
 	extract($row); 
-	$staff_entry = array(	"ID" => $row['ID'],
-							"Position" => $row['Position'],
-							"Salary" => $row['Salary'],
-							"Fname" => $row['Fname'],
-							"Lname" => $row['Lname'],
-							"Birth_day" => $row['Birth_day'],
-							"Birth_month" => $row['Birth_month'],
-							"Birth_year" => $row['Birth_year'],
-							"Phone_number" => $row['Phone_number']
+	$equipment_entry = array(	"ID" => $row['ID'],
+							"Name" => $row['Name'],
+							"Quantity" => $row['Quantity']
 						);
-	array_push($staff_arr, $staff_entry);
+	array_push($equipment_arr, $equipment_entry);
 	}
 
 	http_response_code(200); //ok reponse
-	echo json_encode($staff_arr);
+	echo json_encode($equipment_arr);
 }
 else{
 	http_response_code(404); //error response
