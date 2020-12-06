@@ -33,7 +33,7 @@
 		
 		public function check_stocked_by(){
 			//checks if user is in database
-			$check = $this->conn->prepare("SELECT * FROM ".$this->table_name." WHERE med_name = ? AND pharm_name = ?");
+			$check = $this->conn->prepare("SELECT * FROM ".$this->table_name." WHERE Med_name = ? AND Pharm_name = ?");
 			$check -> bind_param("ss", $this-> med_name, $this-> pharm_name);
 			$check -> execute();
 			$row = $check -> get_result()->num_rows;
@@ -42,13 +42,36 @@
 			}
 			return false;
 		}
+		
+				public function remove(){
+			
+			if ($this->check_stocked_by()){
+				//removes user if found in database
+				$statement = $this->conn->prepare("DELETE FROM ".$this->table_name." WHERE Med_name = ? AND Pharm_name = ?");
+				$statement -> bind_param("iss", $this->price, $this->med_name, $this->pharm_name);
+				if ($statement -> execute()){
+					return true;
+				}
+			}
+			
+			return false;
+			
+		}
+		
+		public function retrieve(){
+			$statement = $this->conn->prepare("SELECT * FROM ".$this->table_name." WHERE Med_name = ? AND Pharm_name = ?");
+			$statement -> bind_param("iss", $this->price, $this->med_name, $this->pharm_name);
+			$statement -> execute();
+			$result = $statement -> get_result();
+			return $result;
+		}
 			
 		
 		public function update_price(){
 			
 			if ($this->check_stocked_by()){
 				//updates price
-				$statement = $this->conn->prepare("UPDATE ".$this->table_name." SET Position = ? WHERE med_name = ? AND pharm_name = ?");
+				$statement = $this->conn->prepare("UPDATE ".$this->table_name." SET Position = ? WHERE Med_name = ? AND Pharm_name = ?");
 				$statement -> bind_param("iss", $this->price, $this->med_name, $this->pharm_name);
 				if ($statement -> execute()){
 					return true;
