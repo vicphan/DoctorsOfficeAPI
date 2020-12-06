@@ -16,8 +16,9 @@ $stocked_by = new Stocked_by($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->ID)){
-	$stocked_by->id = $data->ID;
+if (!empty($data->Pharm_name) and !empty($data->Med_name)){
+	$test ->med_name = $data -> Med_name;
+	$test ->pharm_name = $data -> Pharm_name;
 	//update price
 	if (!empty($data-> Price)){
 		$stocked_by->price = $data->Price;
