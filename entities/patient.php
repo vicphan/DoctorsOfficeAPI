@@ -1,4 +1,5 @@
 <?php 
+
 	class Patient {
 		
 		private $conn;
@@ -56,9 +57,6 @@
 				}
 			
 		}
-		
-		
-
 		
 		public function all(){
 			$statement = $this->conn->prepare("CALL selectAllPatients()");
