@@ -16,7 +16,7 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS insertEquipment') ||
-				!$this->conn->query('CREATE PROCEDURE insertEquipment (IN id INTEGER, name VARCHAR(45), quantity VARCHAR(45)) 
+				!$this->conn->query('CREATE PROCEDURE insertEquipment (IN id INTEGER, name VARCHAR(45), quantity INTEGER) 
 				INSERT INTO equipment VALUES (id, name, quantity)')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
@@ -34,7 +34,7 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateQuantityEquipment') ||
-				!$this->conn->query('CREATE PROCEDURE updateQuantityEquipment (IN quantity VARCHAR(45), s_id INTEGER) 
+				!$this->conn->query('CREATE PROCEDURE updateQuantityEquipment (IN quantity INTEGER, s_id INTEGER) 
 									 UPDATE equipment SET Quantity=quantity WHERE ID=s_id')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
@@ -49,8 +49,8 @@
 		}
 		
 		public function add(){
-			$statement = $this->conn->prepare("CALL insertEquipment(?,?,?,?,?,?,?,?,?)");
-			$statement -> bind_param("isissssss", $this->id, $this->name, $this->quantity);
+			$statement = $this->conn->prepare("CALL insertEquipment(?,?,?)");
+			$statement -> bind_param("isi", $this->id, $this->name, $this->quantity);
 			if ($statement -> execute()){
 				return true;
 			}
@@ -114,7 +114,7 @@
 			if ($this->check_user()){
 				//updates quantity
 				$statement = $this->conn->prepare("CALL updateQuantityEquipment(?,?)");
-				$statement -> bind_param("si", $this->quantity, $this->id);
+				$statement -> bind_param("ii", $this->quantity, $this->id);
 				if ($statement -> execute()){
 					return true;
 				}

@@ -18,18 +18,6 @@ $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->ID)){
 	$equipment->id = $data->ID;
-	//update position
-	if (!empty($data-> Position)){
-		$equipment->position = $data->Position;
-		if ($equipment->update_position()){
-			http_response_code(200);
-			echo json_encode(array("message" => "equipment position was modified"));
-		}
-		else{
-			http_response_code(503);
-			echo json_encode(array("message" => "equipment position was unable to be modified"));
-		}
-	}
 	//update name
 	if (!empty($data-> Name)){
 		$equipment->name = $data->Name;

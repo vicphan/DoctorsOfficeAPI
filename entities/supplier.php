@@ -55,8 +55,8 @@
 		}
 		
 		public function add(){
-			$statement = $this->conn->prepare("CALL insertSupplier(?,?,?,?,?,?,?,?,?)");
-			$statement -> bind_param("isissssss", $this->name, $this->address, $this->email, $this->phone_number);
+			$statement = $this->conn->prepare("CALL insertSupplier(?,?,?,?)");
+			$statement -> bind_param("ssss", $this->name, $this->address, $this->email, $this->phone_number);
 			if ($statement -> execute()){
 				return true;
 			}
@@ -68,7 +68,7 @@
 		public function check_user(){
 			//checks if user is in database
 			$check = $this->conn->prepare("CALL checkSupplier(?)");
-			$check -> bind_param("i", $this-> name);
+			$check -> bind_param("s", $this-> name);
 			$check -> execute();
 			$row = $check -> get_result()->num_rows;
 			if ($row==1){
@@ -82,7 +82,7 @@
 			if ($this->check_user()){
 				//removes user if found in database
 				$statement = $this->conn->prepare("CALL removeSupplier(?)");
-				$statement -> bind_param("i",  $this->name);
+				$statement -> bind_param("s",  $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -94,7 +94,7 @@
 		
 		public function retrieve(){
 			$statement = $this->conn->prepare("CALL checkSupplier(?)");
-			$statement -> bind_param("i", $this-> name);
+			$statement -> bind_param("s", $this-> name);
 			$statement -> execute();
 			$result = $statement -> get_result();
 			return $result;
@@ -106,7 +106,7 @@
 			if ($this->check_user()){
 				//updates address
 				$statement = $this->conn->prepare("CALL updateAddressSupplier(?,?)");
-				$statement -> bind_param("si", $this->address, $this->name);
+				$statement -> bind_param("ss", $this->address, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -120,7 +120,7 @@
 			if ($this->check_user()){
 				//updates email
 				$statement = $this->conn->prepare("CALL updateEmailSupplier(?,?)");
-				$statement -> bind_param("si", $this->email, $this->name);
+				$statement -> bind_param("ss", $this->email, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -134,7 +134,7 @@
 			if ($this->check_user()){
 				//updates position
 				$statement = $this->conn->prepare("CALL updatePhoneNumberSupplier(?,?)");
-				$statement -> bind_param("si", $this->phone_number, $this->name);
+				$statement -> bind_param("ss", $this->phone_number, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}

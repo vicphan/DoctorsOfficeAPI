@@ -27,11 +27,6 @@
 				!$this->conn->query('CREATE PROCEDURE removeMedicine (IN name VARCHAR(45)) DELETE FROM medicine WHERE Name = name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
-/* 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateNameMedicine') ||
-				!$this->conn->query('CREATE PROCEDURE updateNameMedicine (IN name VARCHAR(45)) 
-									 UPDATE medicine SET Name=name WHERE Name=name')){
-					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
-				} */
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateBrandMedicine') ||
 				!$this->conn->query('CREATE PROCEDURE updateBrandMedicine (IN brand VARCHAR(45), name VARCHAR(45)) 
 									 UPDATE medicine SET Brand=brand WHERE Name = name')){
@@ -48,8 +43,8 @@
 		}
 		
 		public function add(){
-			$statement = $this->conn->prepare("CALL insertMedicine(?,?,?,?,?,?,?,?,?)");
-			$statement -> bind_param("isissssss", $this->name, $this->brand);
+			$statement = $this->conn->prepare("CALL insertMedicine(?,?)");
+			$statement -> bind_param("ss", $this->name, $this->brand);
 			if ($statement -> execute()){
 				return true;
 			}
@@ -61,7 +56,7 @@
 		public function check_user(){
 			//checks if user is in database
 			$check = $this->conn->prepare("CALL checkMedicine(?)");
-			$check -> bind_param("i", $this-> name);
+			$check -> bind_param("s", $this-> name);
 			$check -> execute();
 			$row = $check -> get_result()->num_rows;
 			if ($row==1){
@@ -75,7 +70,7 @@
 			if ($this->check_user()){
 				//removes user if found in database
 				$statement = $this->conn->prepare("CALL removeMedicine(?)");
-				$statement -> bind_param("i",  $this->name);
+				$statement -> bind_param("s",  $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -87,33 +82,18 @@
 		
 		public function retrieve(){
 			$statement = $this->conn->prepare("CALL checkMedicine(?)");
-			$statement -> bind_param("i", $this-> name);
+			$statement -> bind_param("s", $this-> name);
 			$statement -> execute();
 			$result = $statement -> get_result();
 			return $result;
 		}
-			
-		
-/* 		public function update_name(){
-			
-			if ($this->check_user()){
-				//updates name
-				$statement = $this->conn->prepare("CALL updateNameMedicine(?,?)");
-				$statement -> bind_param("si", $this->name, $this->id);
-				if ($statement -> execute()){
-					return true;
-				}
-			}
-			
-			return false;
-		} */
 		
 		public function update_brand(){
 			
 			if ($this->check_user()){
 				//updates brand
 				$statement = $this->conn->prepare("CALL updateQuantityMedicine(?,?)");
-				$statement -> bind_param("si", $this->brand, $this->name);
+				$statement -> bind_param("ss", $this->brand, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
