@@ -8,12 +8,12 @@ include_once "../config/database.php"; //includes database.php file
 $database = new Database();
 $db = $database -> getConnection();
 
-if (!$db->query('DROP PROCEDURE IF EXISTS allPrescription') ||
-				!$db->query('CREATE PROCEDURE allPrescription () 
+if (!$db->query('DROP PROCEDURE IF EXISTS allSupplies') ||
+				!$db->query('CREATE PROCEDURE allSupplies () 
 				SELECT * FROM prescribes')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
-$statement = $db->prepare("CALL allPrescription()");
+$statement = $db->prepare("CALL allSupplies()");
 $statement -> execute();
 $result = $statement -> get_result();
 $arr = array();
@@ -22,9 +22,8 @@ $rows = $result -> num_rows;
 if ($rows > 0){
 	while ($row = $result->fetch_array()){
 	extract($row);
-	$entry = array(	"Doc_id" => $row["Doc_ID"],
-					"Patient_num" => $row["Patient_num"],
-					"Med_name" => $row["Med_name"]
+	$entry = array(	"Sup_id" => $row["Sup_id"],
+					"Equip_id" => $row["Equip_id"]
 						);
 	array_push($arr, $entry);
 	}

@@ -11,24 +11,24 @@ include_once "../config/database.php"; //includes database.php file
 $database = new Database();
 $db = $database -> getConnection();
 
-if (!$db->query('DROP PROCEDURE IF EXISTS addPrescription') ||
-				!$db->query('CREATE PROCEDURE addPrescription (IN doctor_id INTEGER, patient_id INTEGER, medicine VARCHAR(45)) 
-				INSERT INTO prescribes VALUES(doctor_id, patient_id, medicine)')){
+if (!$db->query('DROP PROCEDURE IF EXISTS addUses') ||
+				!$db->query('CREATE PROCEDURE addUses (IN doc_id INTEGER, equip_id INTEGER) 
+				INSERT INTO Uses VALUES(doc_id, equip_id)')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->Doc_id) && !empty($data->Patient_num) && !empty($data->Med_name)){
-	$statement = $db -> prepare("CALL addPrescription(?,?,?)");
-	$statement -> bind_param("iis", $data->Doc_id, $data->Patient_num, $data-> Med_name);
+if (!empty($data->Doc_id) && !empty($data->Equip_id)){
+	$statement = $db -> prepare("CALL addUses(?,?)");
+	$statement -> bind_param("ii", $data->Doc_id, $data->Equip_id);
 	if ($statement->execute()){
 		http_response_code(200);
-		echo json_encode(array("message"=>"prescription successfully added"));
+		echo json_encode(array("message"=>"Uses successfully added"));
 	}
 	else{
 		http_response_code(503);
-		echo json_encode(array("message"=>"prescription not added"));
+		echo json_encode(array("message"=>"Uses not added"));
 	}
 }
 else{

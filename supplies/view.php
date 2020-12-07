@@ -8,14 +8,14 @@ include_once "../config/database.php"; //includes database.php file
 $database = new Database();
 $db = $database -> getConnection();
 
-if (!$db->query('DROP PROCEDURE IF EXISTS viewPrescription') ||
-				!$db->query('CREATE PROCEDURE viewPrescription (IN patient INTEGER) 
-				SELECT * FROM prescribes WHERE Patient_num=patient')){
+if (!$db->query('DROP PROCEDURE IF EXISTS viewSupplies') ||
+				!$db->query('CREATE PROCEDURE viewSupplies (IN sup_name VARCHAR(45), equip_id INTEGER) 
+				SELECT * FROM prescribes WHERE Sup_name=sup_name AND Equip_id=equip_id')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
 $data = json_decode(file_get_contents("php://input"));
-$statement = $db->prepare("CALL viewPrescription(?)");
-$statement -> bind_param("i", $data-> Patient_num);
+$statement = $db->prepare("CALL viewSupplies(?,?)");
+$statement -> bind_param("si", $data-> Sup_name, Equip_id);
 $statement -> execute();
 $result = $statement -> get_result();
 $arr = array();
@@ -24,9 +24,8 @@ $rows = $result -> num_rows;
 if ($rows > 0){
 	while ($row = $result->fetch_array()){
 	extract($row);
-	$entry = array(	"Doc_id" => $row["Doc_ID"],
-					"Patient_num" => $row["Patient_num"],
-					"Med_name" => $row["Med_name"]
+	$entry = array(	"Sup_name" => $row["Sup_name"],
+					"Equip_id" => $row["Equip_id"]
 						);
 	array_push($arr, $entry);
 	}

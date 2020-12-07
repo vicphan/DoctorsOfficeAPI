@@ -11,24 +11,24 @@ include_once "../config/database.php"; //includes database.php file
 $database = new Database();
 $db = $database -> getConnection();
 
-if (!$db->query('DROP PROCEDURE IF EXISTS removePrescription') ||
-				!$db->query('CREATE PROCEDURE removePrescription (IN doctor_id INTEGER, patient_id INTEGER, medicine VARCHAR(45)) 
-				DELETE FROM prescribes WHERE Doc_ID=doctor_id AND Patient_num=patient_id AND Med_name = medicine')){
+if (!$db->query('DROP PROCEDURE IF EXISTS removeSupplies') ||
+				!$db->query('CREATE PROCEDURE removeSupplies (IN  sup_name VARCHAR(45), equip_id INTEGER) 
+				DELETE FROM prescribes WHERE Sup_name=sup_name AND Equip_id = equip_id')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->Doc_id) && !empty($data->Patient_num) && !empty($data->Med_name)){
-	$statement = $db -> prepare("CALL removePrescription(?,?,?)");
-	$statement -> bind_param("iis", $data->Doc_id, $data->Patient_num, $data-> Med_name);
+if (!empty($data->Sup_id) && !empty($data->Equip_id)){
+	$statement = $db -> prepare("CALL removeSupplies(?,?)");
+	$statement -> bind_param("si", $data->Sup_id, $data->Equip_id);
 	if ($statement->execute()){
 		http_response_code(200);
-		echo json_encode(array("message"=>"prescription successfully removed"));
+		echo json_encode(array("message"=>"Supplies successfully removed"));
 	}
 	else{
 		http_response_code(503);
-		echo json_encode(array("message"=>"prescription not removed"));
+		echo json_encode(array("message"=>"Supplies not removed"));
 	}
 }
 else{
