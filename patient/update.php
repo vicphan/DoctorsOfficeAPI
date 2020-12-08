@@ -30,6 +30,30 @@ if (!empty($data->Healthcare_num)){
 			echo json_encode(array("message" => "patient address was unable to be modified"));
 		}
 	}
+	//update first name
+	if (!empty($data-> Fname)){
+		$patient->fname = $data->Fname;
+		if ($patient->update_first()){
+			http_response_code(200);
+			echo json_encode(array("message" => "patient first name was modified"));
+		}
+		else{
+			http_response_code(503);
+			echo json_encode(array("message" => "patient first name was unable to be modified"));
+		}
+	}
+	//update last name
+	if (!empty($data-> Lname)){
+		$patient->lname = $data->Lname;
+		if ($patient->update_last()){
+			http_response_code(200);
+			echo json_encode(array("message" => "patient last name was modified"));
+		}
+		else{
+			http_response_code(503);
+			echo json_encode(array("message" => "patient last name was unable to be modified"));
+		}
+	}
 	//update email
 	if (!empty($data-> Email)){
 		$patient ->email = $data ->Email;

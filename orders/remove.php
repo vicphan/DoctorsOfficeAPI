@@ -16,7 +16,7 @@ $orders = new Orders($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data->Doc_ID) AND !empty($data->Patient_num) AND !empty($data->Test_ID)){
+if (!empty($data->Doc_ID) && !empty($data->Patient_num) && !empty($data->Test_ID)){
 	$orders ->doc_id = $data -> Doc_ID;
 	$orders ->patient_num = $data -> Patient_num;
 	$orders ->test_id = $data -> Test_ID;

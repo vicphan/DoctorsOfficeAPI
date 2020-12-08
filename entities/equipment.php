@@ -59,8 +59,8 @@
 		}
 		
 		
-		public function check_user(){
-			//checks if user is in database
+		public function check_equipment(){
+			//checks if equipment is in database
 			$check = $this->conn->prepare("CALL checkEquipment(?)");
 			$check -> bind_param("i", $this-> id);
 			$check -> execute();
@@ -73,7 +73,7 @@
 		
 		public function remove(){
 			
-			if ($this->check_user()){
+			if ($this->check_equipment()){
 				//removes user if found in database
 				$statement = $this->conn->prepare("CALL removeEquipment(?)");
 				$statement -> bind_param("i",  $this->id);
@@ -97,7 +97,7 @@
 		
 		public function update_name(){
 			
-			if ($this->check_user()){
+			if ($this->check_equipment()){
 				//updates name
 				$statement = $this->conn->prepare("CALL updateNameEquipment(?,?)");
 				$statement -> bind_param("si", $this->name, $this->id);
@@ -111,7 +111,7 @@
 		
 		public function update_quantity(){
 			
-			if ($this->check_user()){
+			if ($this->check_equipment()){
 				//updates quantity
 				$statement = $this->conn->prepare("CALL updateQuantityEquipment(?,?)");
 				$statement -> bind_param("ii", $this->quantity, $this->id);

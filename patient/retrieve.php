@@ -21,6 +21,8 @@ if (!empty($data->Healthcare_num)){
 		$row = $patient_entry-> fetch_array();
 		extract($row);
 		$found_entry = array(	"Healthcare_num" => $row['Healthcare_num'],
+							"Fname" => $row['Fname'],
+							"Lname" => $row['Lname'],
 							"Address" => $row['Address'],
 							"Email" => $row['Email'],
 							"Birth_day" => $row['Birth_day'],

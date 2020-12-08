@@ -15,21 +15,21 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS insertMedicine') ||
-				!$this->conn->query('CREATE PROCEDURE insertMedicine (name VARCHAR(45), brand VARCHAR(45)) 
+				!$this->conn->query('CREATE PROCEDURE insertMedicine (IN name VARCHAR(45), brand VARCHAR(45)) 
 				INSERT INTO medicine VALUES (name, brand)')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS checkMedicine') ||
-				!$this->conn->query('CREATE PROCEDURE checkMedicine (IN name VARCHAR(45)) SELECT * FROM medicine WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE checkMedicine (IN p_name VARCHAR(45)) SELECT * FROM medicine WHERE Name = p_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS removeMedicine') ||
-				!$this->conn->query('CREATE PROCEDURE removeMedicine (IN name VARCHAR(45)) DELETE FROM medicine WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE removeMedicine (IN p_name VARCHAR(45)) DELETE FROM medicine WHERE Name = p_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateBrandMedicine') ||
-				!$this->conn->query('CREATE PROCEDURE updateBrandMedicine (IN brand VARCHAR(45), name VARCHAR(45)) 
-									 UPDATE medicine SET Brand=brand WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE updateBrandMedicine (IN p_brand VARCHAR(45), p_name VARCHAR(45)) 
+									 UPDATE medicine SET Brand=p_brand WHERE Name = p_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 		}
@@ -53,8 +53,8 @@
 		}
 		
 		
-		public function check_user(){
-			//checks if user is in database
+		public function check_medicine(){
+			//checks if medicine is in database
 			$check = $this->conn->prepare("CALL checkMedicine(?)");
 			$check -> bind_param("s", $this-> name);
 			$check -> execute();
@@ -67,8 +67,8 @@
 		
 		public function remove(){
 			
-			if ($this->check_user()){
-				//removes user if found in database
+			if ($this->check_medicine()){
+				//removes medicine
 				$statement = $this->conn->prepare("CALL removeMedicine(?)");
 				$statement -> bind_param("s",  $this->name);
 				if ($statement -> execute()){
@@ -89,10 +89,9 @@
 		}
 		
 		public function update_brand(){
-			
-			if ($this->check_user()){
+			if ($this->check_medicine()){
 				//updates brand
-				$statement = $this->conn->prepare("CALL updateQuantityMedicine(?,?)");
+				$statement = $this->conn->prepare("CALL updateBrandMedicine(?,?)");
 				$statement -> bind_param("ss", $this->brand, $this->name);
 				if ($statement -> execute()){
 					return true;

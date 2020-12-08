@@ -21,7 +21,7 @@ if (!empty($data-> Doc_ID) && !empty($data-> Patient_num) && !empty($data-> Test
 		$orders -> patient_num = $data -> Patient_num;
 		$orders -> test_id = $data -> Test_ID;
 		
-		if ($orders -> add()){
+		if ($orders -> insert()){
 			http_response_code(201);
 			echo json_encode(array("message" => "orders was added"));
 		}

@@ -10,7 +10,7 @@ $db = $database -> getConnection();
 
 if (!$db->query('DROP PROCEDURE IF EXISTS allUses') ||
 				!$db->query('CREATE PROCEDURE allUses () 
-				SELECT * FROM prescribes')){
+				SELECT * FROM uses')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
 $statement = $db->prepare("CALL allUses()");
@@ -22,8 +22,8 @@ $rows = $result -> num_rows;
 if ($rows > 0){
 	while ($row = $result->fetch_array()){
 	extract($row);
-	$entry = array(	"Doc_id" => $row["Doc_id"],
-					"Equip_id" => $row["Equip_id"]
+	$entry = array(	"Doc_id" => $row["Doc_ID"],
+					"Equip_id" => $row["Equip_ID"]
 						);
 	array_push($arr, $entry);
 	}

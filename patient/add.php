@@ -16,9 +16,11 @@ $patient = new Patient($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data-> Healthcare_num) && !empty($data-> Address) && !empty($data-> Email) && 
+if (!empty($data-> Healthcare_num) && !empty($data->Fname) && !empty($data->Lname) && !empty($data-> Address) && !empty($data-> Email) && 
     !empty($data-> Birth_day) && !empty($data-> Birth_month) && !empty($data-> Birth_year) && !empty($data-> Phone_number)){
 		$patient -> healthcare_num = $data -> Healthcare_num;
+		$patient -> fname = $data -> Fname;
+		$patient -> lname = $data -> Lname;
 		$patient -> address = $data -> Address;
 		$patient -> email = $data -> Email;
 		$patient -> birth_day = $data -> Birth_day;

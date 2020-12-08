@@ -7,28 +7,27 @@ header("Access-Control-Max-Age: 300"); //results can be cached for 5 minutes
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once "../config/database.php"; //includes database.php file
-include_once "../entities/pharmacy.php"; //includes pharmacy.php file
+include_once "../entities/equipment.php"; //includes equipment.php file
 
 $database = new Database();
 $db = $database -> getConnection();
 
-$pharmacy = new Pharmacy($db);
+$equipment = new Equipment($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
-if (!empty($data-> Name) && !empty($data-> Email) && !empty($data-> Address) && !empty($data-> Phone_number)){
-		$pharmacy -> name = $data-> Name;
-		$pharmacy -> email = $data -> Email;
-		$pharmacy -> address = $data -> Address;
-		$pharmacy -> phone_number = $data -> Phone_number;
+if (!empty($data-> ID) && !empty($data-> Name) && !empty($data-> Quantity)){
+		$equipment -> id = $data-> ID;
+		$equipment -> name = $data -> Name;
+		$equipment -> quantity = $data -> Quantity;
 		
-		if ($pharmacy -> insert()){
+		if ($equipment -> add()){
 			http_response_code(201);
-			echo json_encode(array("message" => "pharmacy was added"));
+			echo json_encode(array("message" => "equipment was added"));
 		}
 		else{
 			http_response_code(503);
-			echo json_encode(array("message" => "pharmacy was not added"));
+			echo json_encode(array("message" => "equipment was not added"));
 		}
 	}
 else{

@@ -17,7 +17,7 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS insertPharmacy') ||
-				!$this->conn->query('CREATE PROCEDURE insertPharmacy (IN name VARCHAR(45), email VARCHAR(45), phone_number VARCHAR(45), address VARCHAR(45)
+				!$this->conn->query('CREATE PROCEDURE insertPharmacy (IN name VARCHAR(45), email VARCHAR(45), phone_number VARCHAR(45), address VARCHAR(45))
 				INSERT INTO pharmacy VALUES (name, email, phone_number, address)')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
@@ -35,7 +35,7 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updatePhoneNumberPharmacy') ||
-				!$this->conn->query('CREATE PROCEDURE updatePhoneNumberPharmacy (IN phone_number INTEGER, p_name VARCHAR(45)) 
+				!$this->conn->query('CREATE PROCEDURE updatePhoneNumberPharmacy (IN phone_number VARCHAR(45), p_name VARCHAR(45)) 
 									 UPDATE pharmacy SET Phone_number=phone_number WHERE Name = p_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
@@ -120,7 +120,7 @@
 			if ($this->check_pharmacy()){
 				//updates address
 				$statement = $this->conn->prepare("CALL updatePhoneNumberPharmacy(?,?)");
-				$statement -> bind_param("ss", $this->address, $this->name);
+				$statement -> bind_param("ss", $this->phone_number, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -131,10 +131,10 @@
 		
 		public function updateAddressPharmacy(){
 			
-			if ($this->check_user()){
+			if ($this->check_pharmacy()){
 				//updates phone_number
 				$statement = $this->conn->prepare("CALL updateAddressPharmacy(?,?)");
-				$statement -> bind_param("ss", $this->phone_number, $this->name);
+				$statement -> bind_param("ss", $this->address, $this->name);
 				if ($statement -> execute()){
 					return true;
 				}

@@ -18,6 +18,8 @@ if ($rows > 0){
 	while ($row = $patient_db->fetch_array()){
 	extract($row);
 	$patient_entry = array(	"Healthcare_num" => $row['Healthcare_num'],
+							"Fname" => $row["Fname"],
+							"Lname" => $row["Lname"],
 							"Address" => $row['Address'],
 							"Email" => $row['Email'],
 							"Birth_day" => $row['Birth_day'],

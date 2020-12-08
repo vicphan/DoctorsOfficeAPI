@@ -33,7 +33,7 @@ if (!empty($data->Name)){
 	//update address
 	if (!empty($data-> Address)){
 		$pharmacy->address = $data->Address;
-		if ($pharmacy->update_address()){
+		if ($pharmacy->updateAddressPharmacy()){
 			http_response_code(200);
 			echo json_encode(array("message" => "pharmacy address was modified"));
 		}
@@ -44,7 +44,7 @@ if (!empty($data->Name)){
 	}
 	//update phone number
 	if (!empty($data-> Phone_number)){
-		$pharmacy->phone_number = $data->Phone_number);
+		$pharmacy->phone_number = $data->Phone_number;
 		if ($pharmacy->update_phone_number()){
 			http_response_code(200);
 			echo json_encode(array("message" => "pharmacy phone number was modified"));

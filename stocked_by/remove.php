@@ -17,8 +17,8 @@ $stocked_by = new Stocked_by($db);
 $data = json_decode(file_get_contents("php://input"));
 
 if (!empty($data->Pharm_name) and !empty($data->Med_name)){
-	$test ->med_name = $data -> Med_name;
-	$test ->pharm_name = $data -> Pharm_name;
+	$stocked_by ->med_name = $data -> Med_name;
+	$stocked_by ->pharm_name = $data -> Pharm_name;
 	if ($stocked_by -> remove()){
 		http_response_code(200);
 		echo json_encode(array("message" => "stocked_by successfully removed"));

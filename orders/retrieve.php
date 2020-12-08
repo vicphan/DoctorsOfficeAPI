@@ -34,6 +34,50 @@ if (!empty($data->Doc_ID) AND !empty($data->Patient_num) AND !empty($data->Test_
 		echo json_encode(array("message"=>"Orders not found"));
 	}
 }
+elseif (!empty($data->Doc_ID)){
+	$orders ->doc_id = $data -> Doc_ID;
+	$orders_entry = $orders-> retrieve_doctor_test();
+	$entries = $orders_entry -> num_rows;
+	if ($entries > 0){
+		$found = array();
+		while($row = $orders_entry-> fetch_array()){
+			extract($row);
+			$found_entry = array(	"Doc_ID" => $row['Doc_ID'],
+							"Patient_num" => $row['Patient_num'],
+							"Test_ID" => $row['Test_ID'],
+						);
+			array_push($found, $found_entry);
+		}
+		http_response_code(200);
+		echo json_encode($found);
+	}
+	else{
+		http_response_code(404);
+		echo json_encode(array("message"=>"Orders not found"));
+	}
+}
+elseif (!empty($data->Patient_num)){
+	$orders ->patient_num = $data -> Patient_num;
+	$orders_entry = $orders-> retrieve_patient_test();
+	$entries = $orders_entry -> num_rows;
+	if ($entries > 0){
+		$found = array();
+		while($row = $orders_entry-> fetch_array()){
+			extract($row);
+			$found_entry = array(	"Doc_ID" => $row['Doc_ID'],
+							"Patient_num" => $row['Patient_num'],
+							"Test_ID" => $row['Test_ID'],
+						);
+			array_push($found, $found_entry);
+		}
+		http_response_code(200);
+		echo json_encode($found);
+	}
+	else{
+		http_response_code(404);
+		echo json_encode(array("message"=>"Orders not found"));
+	}
+}
 else{
 	http_response_code(503);
 	echo json_encode(array("message"=>"Error. Please enter valid id"));

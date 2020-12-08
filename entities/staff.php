@@ -64,7 +64,7 @@
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updatePhoneNumberStaff') ||
 				!$this->conn->query('CREATE PROCEDURE updatePhoneNumberStaff (IN  phone_number VARCHAR(45), s_id INTEGER) 
-									 UPDATE patient SET Phone_number=phone_number WHERE ID=s_id')){
+									 UPDATE staff SET Phone_number=phone_number WHERE ID=s_id')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 		}

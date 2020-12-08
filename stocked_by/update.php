@@ -18,12 +18,12 @@ $data = json_decode(file_get_contents("php://input"));
 
 
 if (!empty($data->Pharm_name) and !empty($data->Med_name)){
-	$test ->med_name = $data -> Med_name;
-	$test ->pharm_name = $data -> Pharm_name;
+	$stocked_by->med_name = $data -> Med_name;
+	$stocked_by ->pharm_name = $data -> Pharm_name;
 	//update price
 	if (!empty($data-> Price)){
 		$stocked_by->price = $data->Price;
-		if ($stocked_by->update_position()){
+		if ($stocked_by->update_price()){
 			http_response_code(200);
 			echo json_encode(array("message" => "stocked_by price was modified"));
 		}

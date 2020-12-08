@@ -6,6 +6,8 @@
 		private $table_name = "patient";
 		
 		public $healthcare_num;
+		public $fname;
+		public $lname;
 		public $address;
 		public $email;
 		public $birth_day;
@@ -20,8 +22,8 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS insertPatient') ||
-				!$this->conn->query('CREATE PROCEDURE insertPatient (IN healthcareNum INTEGER, address VARCHAR(45), email VARCHAR(45), birth_day VARCHAR(45),
-									 birth_month VARCHAR(45), birth_year VARCHAR(45), phone_number VARCHAR(45)) INSERT INTO patient VALUES (healthcareNum, address,
+				!$this->conn->query('CREATE PROCEDURE insertPatient (IN healthcareNum INTEGER, first_name VARCHAR(45), last_name VARCHAR(45), address VARCHAR(45), email VARCHAR(45), birth_day VARCHAR(45),
+									 birth_month VARCHAR(45), birth_year VARCHAR(45), phone_number VARCHAR(45)) INSERT INTO patient VALUES (healthcareNum, first_name, last_name, address,
 									 email, birth_day, birth_month, birth_year, phone_number)')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
@@ -31,6 +33,16 @@
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS removePatient') ||
 				!$this->conn->query('CREATE PROCEDURE removePatient (IN healthcareNum INTEGER) DELETE FROM patient WHERE Healthcare_num = healthcareNum')){
+					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
+				}
+			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateFnamePatient') ||
+				!$this->conn->query('CREATE PROCEDURE updateFnamePatient (IN first_name VARCHAR(45), healthcareNum INTEGER) 
+									 UPDATE patient SET Fname=first_name WHERE Healthcare_num = healthcareNum')){
+					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
+				}
+			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateLnamePatient') ||
+				!$this->conn->query('CREATE PROCEDURE updateLnamePatient (IN last_name VARCHAR(45), healthcareNum INTEGER) 
+									 UPDATE patient SET Lname=last_name WHERE Healthcare_num = healthcareNum')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateAddressPatient') ||
@@ -66,8 +78,8 @@
 		}
 		
 		public function add(){
-			$statement = $this->conn->prepare("CALL insertPatient(?,?,?,?,?,?,?)");
-			$statement -> bind_param("issssss", $this->healthcare_num, $this->address, $this->email,  $this->birth_day,
+			$statement = $this->conn->prepare("CALL insertPatient(?,?,?,?,?,?,?,?,?)");
+			$statement -> bind_param("issssssss", $this->healthcare_num, $this->fname, $this->lname, $this->address, $this->email,  $this->birth_day,
 									$this->birth_month,  $this->birth_year, $this->phone_number);
 			if ($statement -> execute()){
 				return true;
@@ -112,7 +124,32 @@
 			return $result;
 		}
 			
+		public function update_first(){
+			if ($this->check_user()){
+				//updates position
+				$statement = $this->conn->prepare("CALL updateFnamePatient(?,?)");
+				$statement -> bind_param("si", $this->fname, $this->healthcare_num);
+				if ($statement -> execute()){
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
+		public function update_last(){
+			if ($this->check_user()){
+				//updates position
+				$statement = $this->conn->prepare("CALL updateLnamePatient(?,?)");
+				$statement -> bind_param("si", $this->lname, $this->healthcare_num);
+				if ($statement -> execute()){
+					return true;
+				}
+			}
+			
+			return false;
+		}
+			
 		public function update_address(){
 			
 			if ($this->check_user()){

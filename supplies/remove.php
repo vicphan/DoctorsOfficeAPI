@@ -12,8 +12,8 @@ $database = new Database();
 $db = $database -> getConnection();
 
 if (!$db->query('DROP PROCEDURE IF EXISTS removeSupplies') ||
-				!$db->query('CREATE PROCEDURE removeSupplies (IN  sup_name VARCHAR(45), equip_id INTEGER) 
-				DELETE FROM prescribes WHERE Sup_name=sup_name AND Equip_id = equip_id')){
+				!$db->query('CREATE PROCEDURE removeSupplies (IN  sup VARCHAR(45), equip INTEGER) 
+				DELETE FROM supplies WHERE Sup_name=sup AND Equip_id = equip')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $db->errno .") ". $db->error));
 				}
 

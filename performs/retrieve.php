@@ -32,6 +32,48 @@ if (!empty($data-> Nurse_ID) && !empty($data-> Test_ID)){
 		echo json_encode(array("message"=>"Performs not found"));
 	}
 }
+elseif (!empty($data->Nurse_ID)){
+	$performs -> nurse_id = $data-> Nurse_ID;
+	$performs_entry = $performs-> retrieve_tests_by_nurse();
+	$entries = $performs_entry -> num_rows;
+	if ($entries > 0){
+		$arr =array();
+		while($row = $performs_entry-> fetch_array()){
+		extract($row);
+		$found_entry = array(	"Nurse_ID" => $row['Nurse_ID'],
+							"Test_ID" => $row['Test_ID']
+						);
+		array_push($arr, $found_entry);
+		}
+		http_response_code(200);
+		echo json_encode($arr);
+	}
+	else{
+		http_response_code(404);
+		echo json_encode(array("message"=>"Performs not found"));
+	}
+}
+elseif (!empty($data->Test_ID)){
+	$performs -> test_id = $data-> Test_ID;
+	$performs_entry = $performs-> retrieve_tests();
+	$entries = $performs_entry -> num_rows;
+	if ($entries > 0){
+		$arr =array();
+		while($row = $performs_entry-> fetch_array()){
+		extract($row);
+		$found_entry = array(	"Nurse_ID" => $row['Nurse_ID'],
+							"Test_ID" => $row['Test_ID']
+						);
+		array_push($arr, $found_entry);
+		}
+		http_response_code(200);
+		echo json_encode($arr);
+	}
+	else{
+		http_response_code(404);
+		echo json_encode(array("message"=>"Performs not found"));
+	}
+}
 else{
 	http_response_code(503);
 	echo json_encode(array("message"=>"Error. Please enter valid id"));

@@ -22,26 +22,26 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS checkSupplier') ||
-				!$this->conn->query('CREATE PROCEDURE checkSupplier (IN name VARCHAR(45)) SELECT * FROM supplier WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE checkSupplier (IN s_name VARCHAR(45)) SELECT * FROM supplier WHERE Name = s_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS removeSupplier') ||
-				!$this->conn->query('CREATE PROCEDURE removeSupplier (IN name VARCHAR(45)) DELETE FROM supplier WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE removeSupplier (IN s_name VARCHAR(45)) DELETE FROM supplier WHERE Name = s_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateAddressSupplier') ||
-				!$this->conn->query('CREATE PROCEDURE updateAddressSupplier (IN address VARCHAR(45), name VARCHAR(45)) 
-									 UPDATE supplier SET Address=address WHERE Name = name')){
+				!$this->conn->query('CREATE PROCEDURE updateAddressSupplier (IN s_address VARCHAR(45), s_name VARCHAR(45)) 
+									 UPDATE supplier SET Address=s_address WHERE Name = s_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updateEmailSupplier') ||
-				!$this->conn->query('CREATE PROCEDURE updateEmailSupplier (IN email VARCHAR(45), name VARCHAR(45)) 
-									 UPDATE supplier SET Email=email WHERE Name=name')){
+				!$this->conn->query('CREATE PROCEDURE updateEmailSupplier (IN s_email VARCHAR(45), s_name VARCHAR(45)) 
+									 UPDATE supplier SET Email=s_email WHERE Name=s_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updatePhoneNumberSupplier') ||
-				!$this->conn->query('CREATE PROCEDURE updatePhoneNumberSupplier (IN  phone_number VARCHAR(45), name VARCHAR(45)) 
-									 UPDATE patient SET Phone_number=phone_number WHERE Name=name')){
+				!$this->conn->query('CREATE PROCEDURE updatePhoneNumberSupplier (IN  s_phone_number VARCHAR(45), s_name VARCHAR(45)) 
+									 UPDATE supplier SET Phone_number=s_phone_number WHERE Name=s_name')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 		}
@@ -65,8 +65,8 @@
 		}
 		
 		
-		public function check_user(){
-			//checks if user is in database
+		public function check_supplier(){
+			//checks if supplier is in database
 			$check = $this->conn->prepare("CALL checkSupplier(?)");
 			$check -> bind_param("s", $this-> name);
 			$check -> execute();
@@ -79,7 +79,7 @@
 		
 		public function remove(){
 			
-			if ($this->check_user()){
+			if ($this->check_supplier()){
 				//removes user if found in database
 				$statement = $this->conn->prepare("CALL removeSupplier(?)");
 				$statement -> bind_param("s",  $this->name);
@@ -103,7 +103,7 @@
 		
 		public function update_address(){
 			
-			if ($this->check_user()){
+			if ($this->check_supplier()){
 				//updates address
 				$statement = $this->conn->prepare("CALL updateAddressSupplier(?,?)");
 				$statement -> bind_param("ss", $this->address, $this->name);
@@ -117,7 +117,7 @@
 		
 		public function update_email(){
 			
-			if ($this->check_user()){
+			if ($this->check_supplier()){
 				//updates email
 				$statement = $this->conn->prepare("CALL updateEmailSupplier(?,?)");
 				$statement -> bind_param("ss", $this->email, $this->name);
@@ -131,7 +131,7 @@
 		
 		public function update_pnum(){
 			
-			if ($this->check_user()){
+			if ($this->check_supplier()){
 				//updates position
 				$statement = $this->conn->prepare("CALL updatePhoneNumberSupplier(?,?)");
 				$statement -> bind_param("ss", $this->phone_number, $this->name);

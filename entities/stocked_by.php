@@ -21,16 +21,24 @@
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS checkStocked_by') ||
-				!$this->conn->query('CREATE PROCEDURE checkStocked_by (IN med_name VARCHAR(45), pharm_name VARCHAR(45)) SELECT * FROM Stocked_by WHERE Med_name = med_name AND Pharm_name = pharm_name')){
+				!$this->conn->query('CREATE PROCEDURE checkStocked_by (IN med VARCHAR(45), pharm VARCHAR(45)) SELECT * FROM Stocked_by WHERE Med_name = med AND Pharm_name = pharm')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS removeStocked_by') ||
-				!$this->conn->query('CREATE PROCEDURE removeStocked_by (IN med_name VARCHAR(45), pharm_name VARCHAR(45)) DELETE FROM Stocked_by WHERE Med_name = med_name AND Pharm_name = pharm_name')){
+				!$this->conn->query('CREATE PROCEDURE removeStocked_by (IN med VARCHAR(45), pharm VARCHAR(45)) DELETE FROM Stocked_by WHERE Med_name = med AND Pharm_name = pharm')){
+					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
+				}
+			if (!$this->conn->query('DROP PROCEDURE IF EXISTS checkMedicationInPharmacy') ||
+				!$this->conn->query('CREATE PROCEDURE checkMedicationInPharmacy (IN pharm VARCHAR(45)) SELECT * FROM Stocked_by WHERE Pharm_name = pharm')){
+					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
+				}
+			if (!$this->conn->query('DROP PROCEDURE IF EXISTS checkPharmacyStockMedication') ||
+				!$this->conn->query('CREATE PROCEDURE checkPharmacyStockMedication (IN med VARCHAR(45)) SELECT * FROM Stocked_by WHERE Med_name = med ORDER BY Price ASC')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 			if (!$this->conn->query('DROP PROCEDURE IF EXISTS updatePriceStocked_by') ||
-				!$this->conn->query('CREATE PROCEDURE updatePriceStaff (IN price INTEGER, med_name VARCHAR(45), pharm_name VARCHAR(45)) 
-									 UPDATE stocked_by SET Price=price WHERE Med_name = med_name AND Pharm_name = pharm_name')){
+				!$this->conn->query('CREATE PROCEDURE updatePriceStocked_by (IN m_price INTEGER, med VARCHAR(45), pharm VARCHAR(45)) 
+									 UPDATE stocked_by SET Price=m_price WHERE Med_name = med AND Pharm_name = pharm')){
 					echo json_encode(array("message"=>"Stored procedure creation failed: (". $this->conn->errno .") ". $this->conn->error));
 				}
 		}
@@ -65,12 +73,12 @@
 			return false;
 		}
 		
-				public function remove(){
+		public function remove(){
 			
 			if ($this->check_stocked_by()){
 				//removes user if found in database
 				$statement = $this->conn->prepare("CALL removeStocked_by(?,?)");
-				$statement -> bind_param("iss", $this->price, $this->med_name, $this->pharm_name);
+				$statement -> bind_param("ss", $this->med_name, $this->pharm_name);
 				if ($statement -> execute()){
 					return true;
 				}
@@ -82,12 +90,27 @@
 		
 		public function retrieve(){
 			$statement = $this->conn->prepare("CALL checkStocked_by(?,?)");
-			$statement -> bind_param("iss", $this->price, $this->med_name, $this->pharm_name);
+			$statement -> bind_param("ss",  $this->med_name, $this->pharm_name);
 			$statement -> execute();
 			$result = $statement -> get_result();
 			return $result;
 		}
-			
+		
+		public function retrieve_pharmacy(){
+			$statement = $this->conn->prepare("CALL checkMedicationInPharmacy(?)");
+			$statement -> bind_param("s",  $this->pharm_name);
+			$statement -> execute();
+			$result = $statement -> get_result();
+			return $result;
+		}
+		
+		public function retrieve_medication(){
+			$statement = $this->conn->prepare("CALL checkPharmacyStockMedication(?)");
+			$statement -> bind_param("s",  $this->med_name);
+			$statement -> execute();
+			$result = $statement -> get_result();
+			return $result;
+		}
 		
 		public function update_price(){
 			
